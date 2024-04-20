@@ -15,24 +15,45 @@ import ContactCard from "./molecules/ContactCard";
 import CustomHeader from "../../../components/CustomHeader";
 import { COLORS } from "../../../utils/config";
 const ContactsList = () => {
-  const [contacts, setContacts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [contacts, setContacts] = React.useState(null);
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
   React.useEffect(() => {
-    if (Platform.OS === "android") {
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-        title: "Contacts",
-        message: "ContactsList app would like to access your contacts.",
-        buttonPositive: "Accept",
-      }).then((value) => {
-        if (value === "granted") {
-          setIsLoading(true);
-          Contacts.getAll().then((contacts) => {
-            setContacts(contacts);
-          });
-          setIsLoading(false);
+    const fetchContacts = async () => {
+      try {
+        setIsLoading(true);
+        let granted = false;
+        if (Platform.OS === "android") {
+          granted =
+            (await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+              {
+                title: "Contacts",
+                message: "ContactsList app would like to access your contacts.",
+                buttonPositive: "Accept",
+              }
+            )) === "granted";
+        } else {
+          granted = true; // Permissions are not required for iOS
         }
-      });
-    }
+
+        if (granted) {
+          const fetchedContacts = await Contacts.getAll();
+          setContacts(fetchedContacts);
+        } else {
+          // Handle permission denied scenario
+          console.log("Permission denied");
+        }
+      } catch (error) {
+        // Handle any errors that occur during permission request or fetching contacts
+        console.error("Error fetching contacts:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchContacts();
   }, []);
   const keyExtractor = (item, idx) => {
     return item?.recordID?.toString() || idx.toString();
@@ -52,17 +73,14 @@ const ContactsList = () => {
         customStyle={className("px-4")}
       />
       <View style={className(" border-light-grey border-b-2")} />
-      {isLoading ? (
-        <ActivityIndicator size={25} color={COLORS.primaryColor} />
+      {!contacts || contacts.length === 0 ? (
+        <View style={className("align-center justify-center flex-1")}>
+          <Text style={className("text-16 text-bold text-pm")}>
+            No contacts available
+          </Text>
+        </View>
       ) : (
         <FlatList
-          ListEmptyComponent={() => (
-            <View style={className("align-center justify-center mt-20")}>
-              <Text style={className("text-16 text-bold text-pm")}>
-                No contacts available
-              </Text>
-            </View>
-          )}
           data={contacts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}

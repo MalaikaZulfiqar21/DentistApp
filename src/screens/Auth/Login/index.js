@@ -82,7 +82,7 @@ const Login = () => {
               />
               <Error error={errors.password} visible={touched.password} />
               <TouchableOpacity style={{ alignSelf: "flex-end" }}>
-                <Text style={[className("text-14   text-pm my-1")]}>
+                <Text style={[className("text-14 text-pm my-1")]}>
                   Forgot Password ?
                 </Text>
               </TouchableOpacity>
@@ -95,7 +95,12 @@ const Login = () => {
           )}
         </Formik>
         <TouchableOpacity style={className("")}>
-          <Text style={[className(" text-14   text-center"), { fontSize: 13 }]}>
+          <Text
+            style={[
+              className(" text-14  text-black text-center"),
+              { fontSize: 13 },
+            ]}
+          >
             Don't have an account ?
             <Text style={className("text-pm")}> Register now</Text>
           </Text>

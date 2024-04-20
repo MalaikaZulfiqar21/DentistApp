@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Layout from "../../../components/Layout";
 import { className } from "../../../global-styles";
