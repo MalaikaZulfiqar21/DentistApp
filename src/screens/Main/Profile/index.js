@@ -27,19 +27,19 @@ const Profile = () => {
       id: 2,
       placeholder: "Last Name",
       value: state.lName,
-      onChange: (text) => setState({ ...state, fName: text }),
+      onChange: (text) => setState({ ...state, lName: text }),
     },
     {
       id: 3,
       placeholder: "Email",
       value: state.email,
-      onChange: (text) => setState({ ...state, fName: text }),
+      onChange: (text) => setState({ ...state, email: text }),
     },
     {
       id: 4,
       placeholder: "Phone Number",
       value: state.phone,
-      onChange: (text) => setState({ ...state, fName: text }),
+      onChange: (text) => setState({ ...state, phone: text }),
     },
   ];
   const navigation = useNavigation();
